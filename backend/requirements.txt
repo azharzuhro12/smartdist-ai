@@ -1,0 +1,33 @@
+# Web Framework & API
+fastapi>=0.115.0,<0.163.0
+uvicorn[standard]>=0.30.0,<0.55.0
+pydantic>=2.10.0,<2.15.0
+pydantic-settings>=2.6.0,<2.17.0
+python-dotenv>=1.0.0,<2.0.0
+
+# Database & ORM
+sqlalchemy>=2.0.0,<2.2.0
+alembic>=1.13.0,<1.21.0
+psycopg2-binary>=2.9.9,<3.0.0
+
+# Cache & Message Broker
+redis>=5.2.0,<8.2.0
+
+# Distributed Task Queue
+celery>=5.4.0,<5.8.0
+
+# Data Engineering & Science
+pandas>=2.2.0,<3.2.0
+numpy>=1.26.0,<2.6.0
+pyarrow>=17.0.0,<27.0.0
+
+# Machine Learning & Demand Forecasting
+scikit-learn>=1.5.0,<2.0.0
+lightgbm>=4.0.0,<5.0.0
+xgboost>=2.0.0,<4.0.0
+joblib>=1.3.0,<2.0.0
+
+# Testing & Quality
+pytest>=8.3.0,<10.0.0
+pytest-asyncio>=0.24.0,<1.5.0
+httpx>=0.27.0,<0.29.0

@@ -1,0 +1,137 @@
+services:
+  # ============================================================================
+  # PostgreSQL Database Service
+  # ============================================================================
+  postgres:
+    image: postgres:16-alpine
+    container_name: smartdist_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-smartdist_db}
+      POSTGRES_USER: ${POSTGRES_USER:-smartdist_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-smartdist_secure_password}
+    ports:
+      - "${HOST_POSTGRES_PORT:-5435}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-smartdist_user} -d ${POSTGRES_DB:-smartdist_db}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - smartdist-network
+
+  # ============================================================================
+  # Redis In-Memory Store & Message Broker
+  # ============================================================================
+  redis:
+    image: redis:7-alpine
+    container_name: smartdist_redis
+    restart: unless-stopped
+    command: ["redis-server", "/usr/local/etc/redis/redis.conf", "--requirepass", "${REDIS_PASSWORD:-smartdist_redis_pass}"]
+    ports:
+      - "${HOST_REDIS_PORT:-6380}:6379"
+    volumes:
+      - redis_data:/data
+      - ./infrastructure/redis/redis.conf:/usr/local/etc/redis/redis.conf:ro
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD:-smartdist_redis_pass}", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - smartdist-network
+
+  # ============================================================================
+  # FastAPI Application Backend
+  # ============================================================================
+  backend:
+    build:
+      context: .
+      dockerfile: infrastructure/docker/Dockerfile.backend
+    container_name: smartdist_backend
+    restart: unless-stopped
+    command: ["uvicorn", "backend.app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+    ports:
+      - "${HOST_BACKEND_PORT:-8035}:8000"
+    volumes:
+      - ./backend:/app/backend
+      - ./ml:/app/ml
+    environment:
+      - ENVIRONMENT=development
+      - DEBUG=true
+      - PROJECT_NAME=SmartDist AI
+      - POSTGRES_SERVER=postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_DB=${POSTGRES_DB:-smartdist_db}
+      - POSTGRES_USER=${POSTGRES_USER:-smartdist_user}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-smartdist_secure_password}
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=${REDIS_PASSWORD:-smartdist_redis_pass}
+      - CELERY_BROKER_URL=redis://:${REDIS_PASSWORD:-smartdist_redis_pass}@redis:6379/1
+      - CELERY_RESULT_BACKEND=redis://:${REDIS_PASSWORD:-smartdist_redis_pass}@redis:6379/2
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    networks:
+      - smartdist-network
+
+  # ============================================================================
+  # Celery Asynchronous Task Worker
+  # ============================================================================
+  celery_worker:
+    build:
+      context: .
+      dockerfile: infrastructure/docker/Dockerfile.backend
+    container_name: smartdist_celery_worker
+    restart: unless-stopped
+    command: ["celery", "-A", "backend.app.workers.celery_app.celery_app", "worker", "--loglevel=info"]
+    volumes:
+      - ./backend:/app/backend
+      - ./ml:/app/ml
+    environment:
+      - ENVIRONMENT=development
+      - POSTGRES_SERVER=postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_DB=${POSTGRES_DB:-smartdist_db}
+      - POSTGRES_USER=${POSTGRES_USER:-smartdist_user}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-smartdist_secure_password}
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=${REDIS_PASSWORD:-smartdist_redis_pass}
+      - CELERY_BROKER_URL=redis://:${REDIS_PASSWORD:-smartdist_redis_pass}@redis:6379/1
+      - CELERY_RESULT_BACKEND=redis://:${REDIS_PASSWORD:-smartdist_redis_pass}@redis:6379/2
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - smartdist-network
+
+# ==============================================================================
+# Persistent Volumes
+# ==============================================================================
+volumes:
+  postgres_data:
+    name: smartdist_postgres_data
+  redis_data:
+    name: smartdist_redis_data
+
+# ==============================================================================
+# Internal Network
+# ==============================================================================
+networks:
+  smartdist-network:
+    name: smartdist_network
+    driver: bridge

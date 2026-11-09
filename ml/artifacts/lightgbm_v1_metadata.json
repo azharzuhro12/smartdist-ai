@@ -1,0 +1,152 @@
+{
+  "model_name": "lightgbm",
+  "version": "v1",
+  "saved_at": "2026-11-09T03:00:04.229639+00:00",
+  "target_name": "quantity_sold",
+  "feature_names": [
+    "store_nbr",
+    "product_id",
+    "year",
+    "month",
+    "day",
+    "day_of_week",
+    "day_of_month",
+    "week_of_year",
+    "quarter",
+    "is_weekend",
+    "is_month_start",
+    "is_month_end",
+    "store_type",
+    "store_cluster",
+    "oil_price",
+    "is_holiday",
+    "is_national_holiday",
+    "is_work_day",
+    "holiday_type",
+    "promotion_quantity",
+    "lag_1",
+    "lag_7",
+    "lag_14",
+    "lag_28",
+    "rolling_mean_7",
+    "rolling_std_7",
+    "rolling_mean_14",
+    "rolling_std_14",
+    "rolling_mean_28",
+    "rolling_std_28"
+  ],
+  "hyperparameters": {
+    "model_name": "lightgbm",
+    "feature_names": [
+      "store_nbr",
+      "product_id",
+      "year",
+      "month",
+      "day",
+      "day_of_week",
+      "day_of_month",
+      "week_of_year",
+      "quarter",
+      "is_weekend",
+      "is_month_start",
+      "is_month_end",
+      "store_type",
+      "store_cluster",
+      "oil_price",
+      "is_holiday",
+      "is_national_holiday",
+      "is_work_day",
+      "holiday_type",
+      "promotion_quantity",
+      "lag_1",
+      "lag_7",
+      "lag_14",
+      "lag_28",
+      "rolling_mean_7",
+      "rolling_std_7",
+      "rolling_mean_14",
+      "rolling_std_14",
+      "rolling_mean_28",
+      "rolling_std_28"
+    ],
+    "target_name": "quantity_sold",
+    "is_fitted": true
+  },
+  "train_date_range": [
+    "2013-01-29",
+    "2013-10-31"
+  ],
+  "val_date_range": [
+    "2013-11-01",
+    "2013-11-30"
+  ],
+  "test_date_range": [
+    "2013-12-01",
+    "2013-12-31"
+  ],
+  "val_metrics": {
+    "mae": 30.2478,
+    "rmse": 219.5597,
+    "wape": 13.0865,
+    "rmsle": 0.5598,
+    "count": 53460,
+    "actual_zero_pct": 49.56,
+    "mean_actual": 231.1365,
+    "mean_predicted": 223.4357,
+    "negative_preds_count": 0
+  },
+  "test_metrics": {
+    "mae": 63.6899,
+    "rmse": 318.4157,
+    "wape": 21.5455,
+    "rmsle": 0.6304,
+    "count": 53460,
+    "actual_zero_pct": 49.22,
+    "mean_actual": 295.6064,
+    "mean_predicted": 265.5601,
+    "negative_preds_count": 0
+  },
+  "library_versions": {
+    "lightgbm": "4.7.0",
+    "xgboost": "3.4.1",
+    "sklearn": "1.9.1",
+    "pandas": "3.1.1",
+    "numpy": "2.5.4"
+  },
+  "is_champion": true,
+  "multi_horizon_evaluation": {
+    "horizon_7d": {
+      "mae": 37.7868,
+      "rmse": 222.9523,
+      "wape": 13.8693,
+      "rmsle": 0.6062,
+      "count": 12474,
+      "actual_zero_pct": 49.12,
+      "mean_actual": 272.4499,
+      "mean_predicted": 261.0838,
+      "negative_preds_count": 0
+    },
+    "horizon_14d": {
+      "mae": 44.52,
+      "rmse": 244.0993,
+      "wape": 16.7249,
+      "rmsle": 0.6712,
+      "count": 24948,
+      "actual_zero_pct": 49.44,
+      "mean_actual": 266.1901,
+      "mean_predicted": 244.2758,
+      "negative_preds_count": 0
+    },
+    "horizon_30d": {
+      "mae": 77.3237,
+      "rmse": 376.5926,
+      "wape": 26.1243,
+      "rmsle": 1.0112,
+      "count": 51678,
+      "actual_zero_pct": 49.24,
+      "mean_actual": 295.9838,
+      "mean_predicted": 245.0645,
+      "negative_preds_count": 0
+    }
+  }
+}

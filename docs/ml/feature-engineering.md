@@ -73,5 +73,5 @@ res["rolling_mean_W"] = (
 )
 ```
 
-Verified by unit test [`test_rolling_features_zero_future_leakage`](file:///home/zarr/Documents/smartdist-ai/backend/tests/test_phase3_features.py#L65-L125):
+Verified by unit test [`test_rolling_features_zero_future_leakage`](../../backend/tests/test_phase3_features.py#L65-L125):
 When target $y_T$ on day 10 is mutated from $10.0$ to $999,999.0$, `rolling_mean_7` on day 10 remains exactly $10.0$ with zero variation.

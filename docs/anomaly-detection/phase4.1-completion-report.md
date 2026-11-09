@@ -78,7 +78,7 @@ The newly engineered **Sales Anomaly Detection System** identifies unusual sales
 ```
 ============================= test session starts ==============================
 platform linux -- Python 3.14.7, pytest-9.2.0, pluggy-1.7.0
-rootdir: /home/zarr/Documents/smartdist-ai
+rootdir: /workspace/smartdist-ai
 configfile: pytest.ini
 testpaths: backend/tests
 plugins: asyncio-1.4.1.post1, anyio-4.16.0

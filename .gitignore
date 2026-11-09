@@ -75,3 +75,23 @@ ml/artifacts/*.pkl
 models/*.pkl
 models/*.joblib
 models/*.onnx
+
+# Frontend & Node.js
+node_modules/
+frontend/node_modules/
+.next/
+frontend/.next/
+out/
+frontend/out/
+*.tsbuildinfo
+next-env.d.ts
+!frontend/src/lib/
+!frontend/src/lib/**
+
+# RAG Local Storage & Caches
+ai_assistant/rag/chroma_storage/
+
+# Database Backups & Dumps
+backups/
+*.dump
+*.dump.sha256

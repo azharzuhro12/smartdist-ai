@@ -132,8 +132,8 @@ Investigation of the accumulation logic revealed:
 Because the table's `data_origin` is labeled `'KAGGLE_PUBLIC'`, consumers or downstream ML engineers might incorrectly assume `sales_amount` represents an observed POS transactional dollar amount rather than a derived financial estimate.
 
 ### Resolution Implemented
-1. **Model Property**: Added `@property def is_amount_estimated(self) -> bool: return True` to `DailySale` in [backend/app/models/business.py](file:///home/zarr/Documents/smartdist-ai/backend/app/models/business.py).
-2. **API Schema**: Added `is_amount_estimated: bool = Field(default=True)` and explicit field descriptions to `DailySaleResponse` in [backend/app/schemas/business.py](file:///home/zarr/Documents/smartdist-ai/backend/app/schemas/business.py).
+1. **Model Property**: Added `@property def is_amount_estimated(self) -> bool: return True` to `DailySale` in [backend/app/models/business.py](../../backend/app/models/business.py).
+2. **API Schema**: Added `is_amount_estimated: bool = Field(default=True)` and explicit field descriptions to `DailySaleResponse` in [backend/app/schemas/business.py](../../backend/app/schemas/business.py).
 3. **Machine Learning Guideline**: For Phase 3 forecasting, models must predict `quantity_sold` (the ground truth volume from the source dataset) rather than `sales_amount`.
 - **Finding**: **PASS** (Resolved without breaking schema or API contracts).
 
@@ -223,12 +223,12 @@ All synthetic inventory satisfies:
 The following backward-compatible improvements were implemented and verified during this audit:
 
 1. **Estimated Sales Flag Added**:
-   - Added `is_amount_estimated` property to [DailySale](file:///home/zarr/Documents/smartdist-ai/backend/app/models/business.py#L194-L203).
-   - Added `is_amount_estimated: bool = True` field with OpenAPI descriptions to [DailySaleResponse](file:///home/zarr/Documents/smartdist-ai/backend/app/schemas/business.py#L107-L119).
+   - Added `is_amount_estimated` property to [DailySale](../../backend/app/models/business.py#L194-L203).
+   - Added `is_amount_estimated: bool = True` field with OpenAPI descriptions to [DailySaleResponse](../../backend/app/schemas/business.py#L107-L119).
 2. **Stream Early-Exit Optimization**:
-   - Added chronological break condition in [DataExtractor.extract_daily_sales_stream](file:///home/zarr/Documents/smartdist-ai/ml/pipelines/ingestion/extract.py#L76-L83) when `chunk["date"].min() > end_date`.
+   - Added chronological break condition in [DataExtractor.extract_daily_sales_stream](../../ml/pipelines/ingestion/extract.py#L76-L83) when `chunk["date"].min() > end_date`.
 3. **Disambiguated ETL Accounting**:
-   - Updated [ETLService.execute_pipeline](file:///home/zarr/Documents/smartdist-ai/backend/app/services/etl_service.py#L128-L165) to include a structured `breakdown` dictionary distinguishing raw processed rows from multi-table inserts.
+   - Updated [ETLService.execute_pipeline](../../backend/app/services/etl_service.py#L128-L165) to include a structured `breakdown` dictionary distinguishing raw processed rows from multi-table inserts.
 
 ---
 

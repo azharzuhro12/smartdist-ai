@@ -1,0 +1,44 @@
+# Version control
+.git
+.gitignore
+
+# Python virtual environment & cache
+.venv
+venv
+__pycache__
+*.py[cod]
+*.pyo
+.pytest_cache
+.coverage
+htmlcov
+
+# Node & Next.js build artifacts
+frontend/node_modules
+frontend/.next
+frontend/out
+node_modules
+.next
+*.tsbuildinfo
+
+# Secrets & Environment configs
+.env
+.env.*
+!.env.example
+!.env.production.example
+*.pem
+*.key
+
+# Backups & Large data dumps
+backups
+*.dump
+*.dump.sha256
+ml/data/raw/*.csv
+
+# Local IDE & system files
+.vscode
+.idea
+.DS_Store
+
+# Local vector DB cache
+ai_assistant/rag/chroma_storage
+

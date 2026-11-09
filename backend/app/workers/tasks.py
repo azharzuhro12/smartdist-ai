@@ -24,7 +24,12 @@ def verify_infrastructure(self, payload: Optional[Dict[str, Any]] = None) -> Dic
     }
 
 
-@celery_app.task(bind=True, name="backend.app.workers.tasks.import_sales_dataset")
+@celery_app.task(
+    bind=True,
+    name="backend.app.workers.tasks.import_sales_dataset",
+    max_retries=3,
+    default_retry_delay=10,
+)
 def import_sales_dataset(
     self,
     max_sales_rows: Optional[int] = 50_000,
@@ -33,6 +38,7 @@ def import_sales_dataset(
 ) -> Dict[str, Any]:
     """
     Background Celery task to execute the sales ingestion and transformation pipeline.
+    Includes automated retry on transient failures.
     """
     task_id = self.request.id
     logger.info(f"Starting import_sales_dataset task: task_id={task_id}, max_rows={max_sales_rows}")
@@ -44,7 +50,9 @@ def import_sales_dataset(
         logger.info(f"import_sales_dataset completed: {result}")
         return result
     except Exception as exc:
-        logger.error(f"import_sales_dataset failed: {exc}", exc_info=True)
+        logger.error(f"import_sales_dataset failed (attempt {self.request.retries}/3): {exc}", exc_info=True)
+        if self.request.retries < self.max_retries:
+            raise self.retry(exc=exc)
         return {
             "status": "FAILED",
             "task_id": task_id,
@@ -103,7 +111,12 @@ def generate_synthetic_inventory(self, seed: int = 42) -> Dict[str, Any]:
         db.close()
 
 
-@celery_app.task(bind=True, name="backend.app.workers.tasks.detect_sales_anomalies")
+@celery_app.task(
+    bind=True,
+    name="backend.app.workers.tasks.detect_sales_anomalies",
+    max_retries=3,
+    default_retry_delay=10,
+)
 def detect_sales_anomalies(
     self,
     start_date: str,
@@ -139,6 +152,8 @@ def detect_sales_anomalies(
         }
     except Exception as exc:
         logger.error(f"detect_sales_anomalies task {task_id} failed: {exc}", exc_info=True)
+        if self.request.retries < self.max_retries:
+            raise self.retry(exc=exc)
         return {"status": "FAILED", "task_id": task_id, "error": str(exc)}
     finally:
         db.close()

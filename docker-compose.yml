@@ -58,6 +58,7 @@ services:
     volumes:
       - ./backend:/app/backend
       - ./ml:/app/ml
+      - ./ai_assistant:/app/ai_assistant
     environment:
       - ENVIRONMENT=development
       - DEBUG=true
@@ -99,6 +100,7 @@ services:
     volumes:
       - ./backend:/app/backend
       - ./ml:/app/ml
+      - ./ai_assistant:/app/ai_assistant
     environment:
       - ENVIRONMENT=development
       - POSTGRES_SERVER=postgres

@@ -28,9 +28,10 @@ COPY backend/requirements.txt /app/backend/requirements.txt
 RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir -r /app/backend/requirements.txt
 
-# Copy backend and ml modules
+# Copy backend, ml, and ai_assistant modules
 COPY backend /app/backend
 COPY ml /app/ml
+COPY ai_assistant /app/ai_assistant
 COPY .env.example /app/.env.example
 
 # Set ownership to non-root user

@@ -1,6 +1,6 @@
 import json
 from typing import List, Union
-from pydantic import Field, field_validator
+from pydantic import Field, field_validator, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -15,9 +15,11 @@ class Settings(BaseSettings):
     # CORS Settings
     CORS_ORIGINS: Union[List[str], str] = [
         "http://localhost:3000",
+        "http://localhost:3030",
         "http://localhost:8000",
         "http://localhost:8035",
         "http://127.0.0.1:3000",
+        "http://127.0.0.1:3030",
         "http://127.0.0.1:8000",
         "http://127.0.0.1:8035",
     ]
@@ -39,12 +41,29 @@ class Settings(BaseSettings):
             return v
         raise ValueError(f"Invalid CORS_ORIGINS format: {v}")
 
+    # Security & Authentication Settings
+    SECRET_KEY: str = Field(
+        default="smartdist_dev_secret_key_change_in_production_super_safe_32chars",
+        description="Secret key for signing JWT tokens. Must be changed in production.",
+    )
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
+    ALGORITHM: str = "HS256"
+    INITIAL_ADMIN_EMAIL: str = "admin@smartdist.ai"
+    INITIAL_ADMIN_USERNAME: str = "admin"
+    INITIAL_ADMIN_PASSWORD: str = "Admin@SmartDist2026!"
+    RATE_LIMIT_LOGIN_PER_MINUTE: int = 5
+    RATE_LIMIT_ASSISTANT_PER_MINUTE: int = 30
+
     # Database Settings
     POSTGRES_SERVER: str = "localhost"
     POSTGRES_PORT: int = 5435
     POSTGRES_DB: str = "smartdist_db"
     POSTGRES_USER: str = "smartdist_user"
     POSTGRES_PASSWORD: str = "smartdist_secure_password"
+    POSTGRES_MIGRATION_URL: Union[str, None] = None
+    POSTGRES_READONLY_USER: str = "smartdist_readonly"
+    POSTGRES_READONLY_PASSWORD: str = "smartdist_readonly_password"
+    POSTGRES_READONLY_URL: Union[str, None] = None
     DATABASE_POOL_SIZE: int = 10
     DATABASE_MAX_OVERFLOW: int = 20
     DATABASE_POOL_TIMEOUT: int = 30
@@ -56,6 +75,21 @@ class Settings(BaseSettings):
             return self.DATABASE_URL
         return (
             f"postgresql+psycopg2://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}@"
+            f"{self.POSTGRES_SERVER}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}"
+        )
+
+    @property
+    def migration_database_uri(self) -> str:
+        if self.POSTGRES_MIGRATION_URL:
+            return self.POSTGRES_MIGRATION_URL
+        return self.sync_database_uri
+
+    @property
+    def readonly_database_uri(self) -> str:
+        if self.POSTGRES_READONLY_URL:
+            return self.POSTGRES_READONLY_URL
+        return (
+            f"postgresql+psycopg2://{self.POSTGRES_READONLY_USER}:{self.POSTGRES_READONLY_PASSWORD}@"
             f"{self.POSTGRES_SERVER}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}"
         )
 
@@ -96,6 +130,18 @@ class Settings(BaseSettings):
     # Logging
     LOG_LEVEL: str = "INFO"
     LOG_FORMAT: str = "json"
+
+    @model_validator(mode="after")
+    def validate_production_secrets(self) -> "Settings":
+        if self.ENVIRONMENT.lower() in ("production", "prod"):
+            if len(self.SECRET_KEY) < 32:
+                raise ValueError("In production, SECRET_KEY must be at least 32 characters long.")
+            insecure_markers = ["dev", "change_in_production", "default", "example"]
+            if any(marker in self.SECRET_KEY.lower() for marker in insecure_markers):
+                raise ValueError(
+                    "In production, SECRET_KEY must not contain default or insecure placeholder values."
+                )
+        return self
 
     model_config = SettingsConfigDict(
         env_file=".env",

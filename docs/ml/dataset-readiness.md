@@ -17,7 +17,7 @@ Phase 3.1 has verified and generated training-ready feature datasets stored in c
 - **Target Column**: `quantity_sold` (Continuous float).
 - **Synthetic Data Isolation**: 0 synthetic inventory or supplier records in the training/validation/test datasets.
 - **NaN Profile**: 0 missing values across all 30 engineered feature columns after initial lag warmup drop ($T \ge 29$).
-- **Bitwise Reproducibility**: Tested and verified by [`test_dataset_builder_reproducibility`](file:///home/zarr/Documents/smartdist-ai/backend/tests/test_phase3_builder.py#L48-L58).
+- **Bitwise Reproducibility**: Tested and verified by [`test_dataset_builder_reproducibility`](../../backend/tests/test_phase3_builder.py#L48-L58).
 
 ## 4. Transition Criteria to Phase 3.2 (Model Training)
 

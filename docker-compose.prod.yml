@@ -1,0 +1,174 @@
+services:
+  # ============================================================================
+  # PostgreSQL Service (Hardened - No public port exposure)
+  # ============================================================================
+  postgres:
+    image: postgres:16-alpine
+    container_name: smartdist_prod_postgres
+    restart: always
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-smartdist_db}
+      POSTGRES_USER: ${POSTGRES_OWNER_USER:-smartdist_owner}
+      POSTGRES_PASSWORD: ${POSTGRES_OWNER_PASSWORD}
+    volumes:
+      - prod_postgres_data:/var/lib/postgresql/data
+      - ./scripts/provision_db_roles.sql:/docker-entrypoint-initdb.d/01_provision_roles.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_OWNER_USER:-smartdist_owner} -d ${POSTGRES_DB:-smartdist_db}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+    deploy:
+      resources:
+        limits:
+          cpus: "2.0"
+          memory: 2048M
+        reservations:
+          cpus: "0.5"
+          memory: 512M
+    networks:
+      - smartdist-prod-network
+
+  # ============================================================================
+  # Redis Store & Queue (Hardened - No public port exposure)
+  # ============================================================================
+  redis:
+    image: redis:7-alpine
+    container_name: smartdist_prod_redis
+    restart: always
+    command: ["redis-server", "/usr/local/etc/redis/redis.conf", "--requirepass", "${REDIS_PASSWORD}"]
+    volumes:
+      - prod_redis_data:/data
+      - ./infrastructure/redis/redis.conf:/usr/local/etc/redis/redis.conf:ro
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD}", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 1024M
+    networks:
+      - smartdist-prod-network
+
+  # ============================================================================
+  # FastAPI Application Backend
+  # ============================================================================
+  backend:
+    build:
+      context: .
+      dockerfile: infrastructure/docker/Dockerfile.backend
+    container_name: smartdist_prod_backend
+    restart: always
+    command: ["uvicorn", "backend.app.main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "4"]
+    env_file:
+      - ${PROD_ENV_FILE:-.env.production}
+    environment:
+      - POSTGRES_SERVER=postgres
+      - POSTGRES_PORT=5432
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+    deploy:
+      resources:
+        limits:
+          cpus: "2.0"
+          memory: 2048M
+        reservations:
+          cpus: "0.5"
+          memory: 512M
+    networks:
+      - smartdist-prod-network
+
+  # ============================================================================
+  # Celery Asynchronous Task Worker
+  # ============================================================================
+  celery_worker:
+    build:
+      context: .
+      dockerfile: infrastructure/docker/Dockerfile.backend
+    container_name: smartdist_prod_celery_worker
+    restart: always
+    command: ["celery", "-A", "backend.app.workers.celery_app.celery_app", "worker", "--loglevel=info", "--concurrency=4"]
+    env_file:
+      - ${PROD_ENV_FILE:-.env.production}
+    environment:
+      - POSTGRES_SERVER=postgres
+      - POSTGRES_PORT=5432
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          cpus: "1.5"
+          memory: 1536M
+    networks:
+      - smartdist-prod-network
+
+  # ============================================================================
+  # Next.js Frontend Dashboard
+  # ============================================================================
+  frontend:
+    build:
+      context: .
+      dockerfile: infrastructure/docker/Dockerfile.frontend
+    container_name: smartdist_prod_frontend
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - NEXT_PUBLIC_API_URL=/api/v1
+      - INTERNAL_API_URL=http://backend:8000/api/v1
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O - http://127.0.0.1:3000/login || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+    deploy:
+      resources:
+        limits:
+          cpus: "1.5"
+          memory: 1536M
+    networks:
+      - smartdist-prod-network
+
+# ==============================================================================
+# Persistent Volumes
+# ==============================================================================
+volumes:
+  prod_postgres_data:
+    name: smartdist_prod_postgres_data
+  prod_redis_data:
+    name: smartdist_prod_redis_data
+
+# ==============================================================================
+# Isolated Production Network
+# ==============================================================================
+networks:
+  smartdist-prod-network:
+    name: smartdist_prod_network
+    driver: bridge

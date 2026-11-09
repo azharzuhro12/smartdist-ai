@@ -17,6 +17,10 @@ from backend.app.models.anomaly import (
     AnomalyDetectionRun,
     SalesAnomaly,
 )
+from backend.app.models.user import (
+    User,
+    UserRole,
+)
 
 __all__ = [
     "TimestampMixin",
@@ -32,4 +36,6 @@ __all__ = [
     "DataQualityResult",
     "AnomalyDetectionRun",
     "SalesAnomaly",
+    "User",
+    "UserRole",
 ]

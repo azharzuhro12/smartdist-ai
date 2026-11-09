@@ -4,6 +4,8 @@ from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy import desc, func, select
 from sqlalchemy.orm import Session
 
+from backend.app.api.deps import require_admin, require_analyst
+from backend.app.models.user import User
 from backend.app.db.session import get_db
 from backend.app.models.anomaly import AnomalyDetectionRun, SalesAnomaly
 from backend.app.schemas.anomaly import (
@@ -29,6 +31,7 @@ router = APIRouter()
 def detect_anomalies(
     payload: AnomalyDetectRequest,
     db: Session = Depends(get_db),
+    admin: User = Depends(require_admin),
 ):
     if payload.start_date > payload.end_date:
         raise HTTPException(
@@ -262,6 +265,7 @@ def update_anomaly_status(
     anomaly_id: int,
     payload: AnomalyStatusUpdateRequest,
     db: Session = Depends(get_db),
+    analyst: User = Depends(require_analyst),
 ):
     valid_statuses = {"NEW", "INVESTIGATING", "CONFIRMED", "FALSE_POSITIVE", "RESOLVED"}
     target_status = payload.status.upper()

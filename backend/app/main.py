@@ -5,7 +5,10 @@ from fastapi.responses import JSONResponse
 from backend.app.api.v1.router import api_router
 from backend.app.core.config import settings
 from backend.app.core.logging import logger, setup_logging
+from backend.app.core.middleware import ObservabilityAndSecurityMiddleware
 from backend.app.core.redis import close_redis_pool
+from backend.app.db.init_db import init_db
+from backend.app.db.session import SessionLocal
 from backend.app.schemas.health import HealthResponse
 
 
@@ -18,6 +21,13 @@ async def lifespan(app: FastAPI):
     logger.info(
         f"Starting {settings.PROJECT_NAME} v{settings.PROJECT_VERSION} in {settings.ENVIRONMENT} mode."
     )
+    # Seed default system users if missing
+    try:
+        with SessionLocal() as db:
+            init_db(db)
+    except Exception as exc:
+        logger.warning(f"Could not run initial admin seed during startup: {exc}")
+
     yield
     logger.info(f"Shutting down {settings.PROJECT_NAME}...")
     close_redis_pool()
@@ -43,6 +53,20 @@ if settings.CORS_ORIGINS:
         allow_methods=["*"],
         allow_headers=["*"],
     )
+
+# Observability (X-Request-ID, duration) and CSRF/Origin enforcement middleware
+app.add_middleware(ObservabilityAndSecurityMiddleware)
+
+
+# Security Headers Middleware
+@app.middleware("http")
+async def add_security_headers(request: Request, call_next):
+    response = await call_next(request)
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    response.headers["X-Frame-Options"] = "DENY"
+    response.headers["X-XSS-Protection"] = "1; mode=block"
+    response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+    return response
 
 
 # Global Exception Handler

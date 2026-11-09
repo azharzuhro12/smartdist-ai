@@ -65,7 +65,7 @@ sequenceDiagram
 ### 2.2 `ForecastIntegrationService` (`backend/app/services/forecast_service.py`)
 - **Responsibility**: Bridges the REST layer to the serialized LightGBM champion artifact (`ml/artifacts/lightgbm_v1.joblib`).
 - **Forecasting Execution**:
-  - Reuses [ForecastingPredictor](file:///home/zarr/Documents/smartdist-ai/ml/inference/predictor.py) for recursive multi-step forecasting across 7-day, 14-day, and 30-day horizons.
+  - Reuses [ForecastingPredictor](../../ml/inference/predictor.py) for recursive multi-step forecasting across 7-day, 14-day, and 30-day horizons.
   - Strictly guarantees zero future lookahead bias by updating autoregressive lags using model predictions $\hat{y}$.
   - Excludes unobserved contemporaneous foot-traffic (`transactions`).
   - Distinguishes unobserved historical series (`status="UNAVAILABLE"`) from genuine zero-demand forecast outputs (`status="ZERO_DEMAND"`).

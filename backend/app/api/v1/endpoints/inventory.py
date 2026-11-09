@@ -6,6 +6,8 @@ from pydantic import BaseModel, Field
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 from backend.app.core.logging import logger
+from backend.app.api.deps import require_analyst
+from backend.app.models.user import User
 from backend.app.db.session import get_db
 from backend.app.models.business import Branch, Inventory, Product
 from backend.app.schemas.business import (
@@ -245,6 +247,7 @@ def get_product_branch_forecast(
     branch_id: int,
     horizon_days: int = Query(7, description="Forecast horizon in days (7, 14, 30)"),
     db: Session = Depends(get_db),
+    current_user: User = Depends(require_analyst),
 ) -> ForecastResponse:
     """
     Retrieve recursive demand forecast records for a specific product and branch.

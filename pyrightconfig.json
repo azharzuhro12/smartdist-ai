@@ -1,0 +1,19 @@
+{
+  "include": [
+    ".",
+    "backend",
+    "ml",
+    "ai_assistant"
+  ],
+  "extraPaths": [
+    ".",
+    "backend",
+    "ml",
+    "ai_assistant"
+  ],
+  "venvPath": ".",
+  "venv": ".venv",
+  "typeCheckingMode": "basic",
+  "reportMissingImports": "none"
+}
+

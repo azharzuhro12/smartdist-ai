@@ -10,128 +10,128 @@
 [![Docker](https://img.shields.io/badge/Docker-Non--Root%20Multi--Stage-2496ED.svg)](https://www.docker.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-An enterprise-grade, data-driven distribution and retail operations platform uniting machine learning demand forecasting, operations research inventory replenishment, multi-evidence anomaly detection, and a secure, offline-first conversational business assistant.
+Platform manajemen operasi distribusi dan ritel berskala *enterprise* berbasis data yang mengintegrasikan peramalan permintaan (*demand forecasting*) menggunakan *machine learning*, optimalisasi pengadaan inventaris berbasis riset operasi (*operations research*), deteksi anomali multi-indikator (*multi-evidence anomaly detection*), serta asisten bisnis interaktif deterministik yang aman dan bekerja secara *offline-first*.
 
 ---
 
-## Quick Navigation
+## Navigasi Cepat
 
-- [1. Project Overview](#1-project-overview)
-- [2. Key Features](#2-key-features)
-- [3. Dashboard Preview](#3-dashboard-preview)
-- [4. System Architecture](#4-system-architecture)
-- [5. Technology Stack](#5-technology-stack)
-- [6. Data Engineering & Provenance](#6-data-engineering--provenance)
-- [7. Demand Forecasting](#7-demand-forecasting)
-- [8. Inventory Optimization](#8-inventory-optimization)
-- [9. Anomaly Detection](#9-anomaly-detection)
-- [10. AI Business Assistant](#10-ai-business-assistant)
-- [11. Security Architecture](#11-security-architecture)
-- [12. Getting Started](#12-getting-started)
-- [13. Testing & Verification](#13-testing--verification)
-- [14. Repository Structure](#14-repository-structure)
-- [15. Dataset Attribution & Academic Disclaimers](#15-dataset-attribution--academic-disclaimers)
-- [16. License](#16-license)
+- [1. Ringkasan Proyek](#1-ringkasan-proyek)
+- [2. Fitur Utama](#2-fitur-utama)
+- [3. Tampilan Antarmuka (Dashboard)](#3-tampilan-antarmuka-dashboard)
+- [4. Arsitektur Sistem](#4-arsitektur-sistem)
+- [5. Stack Teknologi](#5-stack-teknologi)
+- [6. Rekayasa Data & Provenansi](#6-rekayasa-data--provenansi)
+- [7. Peramalan Permintaan (Demand Forecasting)](#7-peramalan-permintaan-demand-forecasting)
+- [8. Optimalisasi Inventaris (Inventory Optimization)](#8-optimalisasi-inventaris-inventory-optimization)
+- [9. Deteksi Anomali (Anomaly Detection)](#9-deteksi-anomali-anomaly-detection)
+- [10. Asisten Bisnis AI (AI Business Assistant)](#10-asisten-bisnis-ai-ai-business-assistant)
+- [11. Arsitektur Keamanan](#11-arsitektur-keamanan)
+- [12. Panduan Instalasi & Menjalankan Aplikasi](#12-panduan-instalasi--menjalankan-aplikasi)
+- [13. Pengujian & Verifikasi Kualitas](#13-pengujian--verifikasi-kualitas)
+- [14. Struktur Direktori Repositori](#14-struktur-direktori-repositori)
+- [15. Atribusi Dataset & Batasan Akademis](#15-atribusi-dataset--batasan-akademis)
+- [16. Lisensi](#16-lisensi)
 
 ---
 
-## 1. Project Overview
+## 1. Ringkasan Proyek
 
-Distribution networks and retail supply chains face an ongoing tension between service availability and capital efficiency. Inaccurate demand estimation triggers either costly excess stock (inflated holding costs and inventory spoilage) or critical stockouts (lost revenue, contractual penalties, and customer churn). Furthermore, operational anomalies such as sudden sales drops or uncharacteristic volume spikes often go unnoticed until standard financial closing cycles.
+Jaringan distribusi dan rantai pasok ritel terus menghadapi dilema operasional antara ketersediaan layanan (*service level*) dan efisiensi modal kerja. Estimasi permintaan yang tidak akurat dapat memicu penumpukan stok berlebih (*overstock*) yang meningkatkan biaya simpan serta risiko kerusakan barang, atau justru kelangkaan stok (*stockout*) yang menyebabkan hilangnya pendapatan potensial dan penurunan kepuasan pelanggan. Selain itu, anomali operasional seperti penurunan penjualan mendadak atau lonjakan volume yang mencurigakan kerap baru terdeteksi pada akhir periode tutup buku.
 
-**SmartDist AI** addresses these operational challenges through a modular, reproducible platform that combines:
-- **Data Engineering:** High-throughput batch ETL processing **648,648 historical daily sales records** across 54 retail branches and 33 product categories.
-- **Machine Learning:** Multi-horizon demand forecasting (7-day, 14-day, and 30-day horizons) using gradient-boosted trees trained under chronological splits with zero lookahead leakage.
-- **Operations Research:** Dynamic Safety Stock ($SS$), Reorder Point ($ROP$), and Economic Order Quantity ($EOQ$) calculations based on empirical lead-time and demand variance.
-- **Anomaly Detection:** Multi-evidence hybrid scoring combining robust statistical metrics (MAD/Z-score), standardized forecast residuals, and unsupervised Isolation Forests.
-- **AI Business Intelligence:** An offline-capable, deterministic decision assistant equipped with local vector search (ChromaDB), domain tool routing, and Safe Text-to-SQL constrained by PostgreSQL read-only role permissions.
+**SmartDist AI** menjawab tantangan operasional tersebut melalui platform modular yang siap direproduksi dengan menggabungkan:
+- **Rekayasa Data (Data Engineering):** Pemrosesan batch ETL berkinerja tinggi atas **648.648 data historis observasi penjualan harian agregat** di 54 cabang toko dan 33 kategori famili produk.
+- **Machine Learning:** Peramalan permintaan multi-horizon (horizon 7 hari, 14 hari, dan 30 hari) menggunakan algoritma *gradient-boosted trees* yang dilatih dengan partisi kronologis tanpa kebocoran data masa depan (*zero lookahead leakage*).
+- **Riset Operasi (Operations Research):** Penentuan dinamis atas Safety Stock ($SS$), Reorder Point ($ROP$), dan Economic Order Quantity ($EOQ$) berdasarkan varians waktu tunggu (*lead time*) dan varians permintaan riil.
+- **Deteksi Anomali:** Mesin penilaian hibrida multi-indikator yang menggabungkan statistik *robust* (MAD/Z-score), residual peramalan terstandarisasi, dan algoritma *unsupervised* Isolation Forest.
+- **Business Intelligence & AI:** Asisten pengambil keputusan deterministik yang dapat berjalan *offline*, dilengkapi pencarian semantik vektor lokal (ChromaDB), perutean alat berbasis domain, serta eksekusi *Safe Text-to-SQL* yang dibatasi oleh hak akses read-only di level basis data PostgreSQL.
 
 > [!NOTE]
-> This platform was engineered as an applied machine learning and backend systems portfolio project. It uses authentic historical daily sales records (store-family-date observations) from the public Corporation Favorita Kaggle competition combined with procedurally generated synthetic inventory and supplier baselines. It does not make exaggerated claims of unverified financial savings in live commercial environments.
+> Proyek ini dikembangkan sebagai portofolio teknis rekayasa sistem *backend* dan *applied machine learning*. Proyek ini menggunakan data penjualan harian riil (observasi agregat toko-famili-tanggal) dari kompetisi publik Kaggle Corporation Favorita, yang dipadukan dengan baseline inventaris dan pemasok sintetis prosedural. Platform ini tidak membuat klaim penghematan finansial komersial yang tidak terverifikasi.
 
 ---
 
-## 2. Key Features
+## 2. Fitur Utama
 
-The platform provides six primary operational interfaces:
+Aplikasi ini menyediakan enam antarmuka operasional utama:
 
 1. **Executive Overview (`/`)**:
-   - Synthesizes top-level KPI metrics: estimated total revenue, active operational branches, pending inventory shortage alerts, and model forecast accuracy.
-   - Displays aggregated 30-day historical revenue trends alongside a performance ranking table of regional branches.
+   - Menyajikan KPI operasional tingkat tinggi: estimasi total pendapatan, jumlah cabang aktif, peringatan kelangkaan stok (*shortage alerts*), dan akurasi model peramalan.
+   - Menampilkan visualisasi tren pendapatan historis 30 hari serta tabel peringkat performa cabang regional.
 2. **Sales Analytics (`/sales`)**:
-   - Multi-dimensional sales analysis allowing operational managers to dissect historical daily sales observations and revenue by store cluster, city, and product family.
-   - Filterable timeline visualizer tracking seasonal shifts, holiday impacts, and external economic signals (crude oil prices).
+   - Analisis penjualan multi-dimensi yang memungkinkan manajer operasional membedah observasi penjualan harian dan pendapatan berdasarkan kluster toko, kota, dan kategori famili produk.
+   - Grafik interaktif untuk memantau pergeseran musiman, dampak hari libur, dan sinyal ekonomi eksternal (harga minyak mentah).
 3. **Demand Forecasting (`/forecasting`)**:
-   - Interactive forward-looking demand explorer for store-product pairs.
-   - Visualizes recursive 7-day, 14-day, and 30-day predicted demand curves evaluated against out-of-sample holdout observations, coupled with operations research inventory replenishment calculations.
+   - Eksplorasi peramalan permintaan interaktif untuk setiap kombinasi toko dan produk.
+   - Menampilkan kurva prediksi rekursif multi-horizon (7 hari, 14 hari, dan 30 hari) yang dievaluasi langsung terhadap data aktual *holdout*, lengkap dengan rekomendasi pengadaan inventaris berbasis riset operasi.
 4. **Inventory Optimization (`/inventory`)**:
-   - Stock health dashboard evaluating current on-hand warehouse inventory against dynamic $ROP$ and $SS$ boundaries.
-   - Generates automated batch purchase order recommendations via $EOQ$ lot sizing and categorizes catalog items into an ABC-XYZ inventory matrix.
+   - Dasbor kesehatan stok yang mengevaluasi inventaris fisik gudang (*on-hand inventory*) terhadap ambang batas dinamis $ROP$ dan $SS$.
+   - Menghasilkan rekomendasi pesanan pembelian batch otomatis berbasis lot sizing $EOQ$ serta mengklasifikasikan katalog produk ke dalam matriks inventaris ABC-XYZ.
 5. **Anomaly Detection (`/anomalies`)**:
-   - Real-time and batch operational triage feed identifying irregular demand spikes, demand collapses, and zero-sales outages.
-   - Explains detected anomalies via a multi-evidence inspector breaking down statistical Z-scores, forecast residuals, and Isolation Forest outlier contributions.
+   - Dasbor triase anomali operasional untuk mendeteksi lonjakan volume penjualan tidak wajar, anjloknya permintaan, atau indikasi kegagalan operasional (*zero-sales outage*).
+   - Menyediakan inspektur multi-bukti yang merinci kontribusi nilai Z-score statistik, deviasi residual model, dan skor pencilan Isolation Forest.
 6. **AI Business Assistant (`/assistant`)**:
-   - Conversational operations console providing natural language querying over sales analytics, inventory decisions, and Standard Operating Procedures (SOPs).
-   - Generates and executes safe, sanitized read-only SQL queries with provenance attribution, and retrieves internal policy documentation via semantic search.
+   - Konsol interaktif bahasa alami untuk mengevaluasi analisis penjualan, rekomendasi inventaris, dan Standar Operasional Prosedur (SOP).
+   - Menghasilkan dan mengeksekusi kueri SQL read-only yang aman dengan atribusi provenansi data, serta menemukan kutipan dokumen SOP internal melalui pencarian semantik.
 
 ---
 
-## 3. Dashboard Preview
+## 3. Tampilan Antarmuka (Dashboard)
 
-The visual dashboard is built with Next.js 14 (App Router) and Tailwind CSS.
+Antarmuka dasbor web dibangun menggunakan Next.js 14 (App Router) dan Tailwind CSS.
 
 | Executive Overview | Demand Forecasting |
 | :---: | :---: |
 | ![Executive Overview](screenshots/dashboard/executive-overview.png) | ![Demand Forecasting](screenshots/forecasting/demand-forecasting.png) |
-| *High-level revenue trends, shortage alerts & branch rankings* | *Multi-horizon predictions (7d/14d/30d) vs actual sales* |
+| *Tren pendapatan tingkat tinggi, peringatan kritis & ranking cabang* | *Prediksi multi-horizon (7h/14h/30h) vs data penjualan aktual* |
 
 | Inventory Optimization | AI Business Assistant |
 | :---: | :---: |
 | ![Inventory Optimization](screenshots/inventory/inventory-optimization.png) | ![AI Business Assistant](screenshots/assistant/ai-business-assistant.png) |
-| *Safety Stock, Dynamic ROP, EOQ & ABC-XYZ matrix* | *Safe Text-to-SQL, SOP citations & provenance badges* |
+| *Safety Stock, Dynamic ROP, EOQ & Matriks Analisis ABC-XYZ* | *Safe Text-to-SQL, sitasi SOP & badge transparansi data* |
 
 | Sales Analytics | Anomaly Detection |
 | :---: | :---: |
 | ![Sales Analytics](screenshots/dashboard/sales-analytics.png) | ![Anomaly Detection](screenshots/anomalies/anomaly-detection.png) |
-| *Multi-dimensional sales volume & revenue analysis* | *Multi-evidence anomaly triage & severity badges* |
+| *Analisis multi-dimensi volume penjualan & pendapatan per cabang* | *Triase anomali multi-bukti & indikator tingkat keparahan* |
 
-> *Note: Authentic 1440×1000 screenshots captured directly from the live application runtime. For a complete 5–7 minute technical interview walkthrough script, refer to the [Portfolio Demonstration Guide](docs/deployment/portfolio-demo-guide.md).*
+> *Catatan: Seluruh tangkapan layar di atas diambil secara langsung dari aplikasi yang sedang berjalan pada resolusi 1440×1000. Untuk panduan demonstrasi teknis berdurasi 5–7 menit, silakan merujuk ke [Portfolio Demonstration Guide](docs/deployment/portfolio-demo-guide.md).*
 
 ---
 
-## 4. System Architecture
+## 4. Arsitektur Sistem
 
 ```mermaid
 graph TD
-    subgraph ClientTier["Presentation Tier"]
+    subgraph ClientTier["Lapisan Presentasi (Frontend)"]
         UI["Next.js 14 Dashboard<br/>(App Router, Tailwind CSS, Recharts)"]
     end
 
-    subgraph SecurityGateway["Ingress & Security Controls"]
+    subgraph SecurityGateway["Gerbang Masuk & Kontrol Keamanan"]
         CORS["Strict CORS Whitelist"]
-        CSRF["Double-Submit CSRF Verification<br/>(csrf_token cookie + X-CSRF-Token header)"]
-        RateLimiter["Redis Sliding-Window Rate Limiter<br/>(Fail-Closed on Auth Routes)"]
+        CSRF["Verifikasi Double-Submit CSRF<br/>(cookie csrf_token + header X-CSRF-Token)"]
+        RateLimiter["Redis Sliding-Window Rate Limiter<br/>(Fail-Closed pada Rute Otentikasi)"]
         RBAC["FastAPI RBAC Dependencies<br/>(ADMIN, ANALYST, VIEWER)"]
     end
 
-    subgraph AppTier["Core Application Engine (FastAPI)"]
+    subgraph AppTier["Mesin Aplikasi Utama (FastAPI)"]
         API["FastAPI REST Router (4 Uvicorn Workers)"]
-        Obs["Observability Middleware<br/>(X-Request-ID Correlation & Duration Tracing)"]
-        Forecaster["Inference Service (LightGBM Champion)"]
-        OptEngine["Inventory Optimization Service (EOQ / ROP / SS)"]
-        Scorer["Hybrid Anomaly Scorer (Z-Score + Residual + IsoForest)"]
-        AssistantOrch["AI Assistant Orchestrator (Intent Classifier & Tool Router)"]
+        Obs["Middleware Observabilitas<br/>(Korelasi X-Request-ID & Pelacakan Latensi)"]
+        Forecaster["Layanan Inferensi (Champion LightGBM)"]
+        OptEngine["Layanan Optimasi Inventaris (EOQ / ROP / SS)"]
+        Scorer["Pemberi Skor Anomali Hibrida (Z-Score + Residual + IsoForest)"]
+        AssistantOrch["Orkestrator Asisten AI (Intent Classifier & Perute Alat)"]
     end
 
-    subgraph AsyncTier["Asynchronous Processing Fleet"]
+    subgraph AsyncTier["Pemrosesan Asinkron"]
         RedisQueue[("Redis 7 Broker & Result Store")]
-        Worker["Celery Worker Fleet (Non-root smartdist)<br/>(Batch Ingestion, Data Quality, Anomaly Runs)"]
+        Worker["Armada Celery Worker (Non-root smartdist)<br/>(Batch Ingestion, Data Quality, Anomaly Runs)"]
     end
 
-    subgraph DataTier["Data Persistence & Isolation Tier"]
-        DB_App[("PostgreSQL 16 (Runtime Role: smartdist_app)<br/>Operational DML Only (No DDL)")]
-        DB_RO[("PostgreSQL 16 (AI Role: smartdist_readonly)<br/>SELECT Only on Business Tables (No Users Access)")]
-        VectorStore[("ChromaDB Vector Store / TF-IDF Index<br/>(Internal SOP Document Passages)")]
+    subgraph DataTier["Penyimpanan Data & Isolasi Hak Akses"]
+        DB_App[("PostgreSQL 16 (Role Runtime: smartdist_app)<br/>Hanya DML Operasional (Tanpa Izin DDL)")]
+        DB_RO[("PostgreSQL 16 (Role AI: smartdist_readonly)<br/>Hanya SELECT pada Tabel Bisnis (Blokir Tabel Users)")]
+        VectorStore[("ChromaDB Vector Store / TF-IDF Index<br/>(Penyimpanan Kutipan Dokumen SOP Internal)")]
     end
 
     UI --> SecurityGateway
@@ -143,357 +143,358 @@ graph TD
     API --> Scorer
     API --> AssistantOrch
 
-    API --> |Enqueue Heavy Jobs| RedisQueue
+    API --> |Antrean Tugas Berat| RedisQueue
     RedisQueue --> Worker
     Worker --> DB_App
 
     API --> DB_App
-    AssistantOrch --> |Local Semantic Search| VectorStore
-    AssistantOrch --> |Pre-Validated Read-Only Queries| DB_RO
+    AssistantOrch --> |Pencarian Semantik Lokal| VectorStore
+    AssistantOrch --> |Kueri Read-Only Tervalidasi| DB_RO
 ```
 
-### Component Boundaries & Communication:
-- **Synchronous vs. Asynchronous:** Standard dashboard reads and single-product forecasts are served synchronously via FastAPI. Heavy data ingestion, data quality audits, and batch anomaly detection across 648,000 records are dispatched asynchronously to Celery workers via Redis.
-- **Database Privilege Boundary:** The application runtime connects as `smartdist_app` (DML only, barred from DDL). The conversational SQL assistant is isolated to `smartdist_readonly` (strictly read-only transactions, zero write privileges, and denied access to authentication/user tables).
-- **Offline AI Design:** The AI Assistant uses local deterministic routing, local ChromaDB embeddings, and rule-based synthesis. It makes zero calls to external paid LLM APIs at runtime.
+### Batasan Komponen & Pola Komunikasi:
+- **Sinkron vs. Asinkron:** Pembacaan data dasbor dan inferensi peramalan produk tunggal ditangani secara sinkron via FastAPI. Proses berat seperti *batch ingestion*, audit kualitas data, dan kalkulasi deteksi anomali pada 648.000+ data dialihkan secara asinkron ke Celery worker melalui Redis.
+- **Isolasi Hak Akses Basis Data:** Aplikasi utama terhubung menggunakan role `smartdist_app` (hanya izin DML, dilarang menjalankan DDL). Asisten SQL terisolasi sepenuhnya pada role `smartdist_readonly` (transaksi read-only absolut, tanpa izin tulis, dan ditolak aksesnya ke tabel pengguna/kredensial).
+- **Desain AI Offline-First:** Asisten AI menggunakan perutean deterministik lokal, embedding lokal ChromaDB, dan sintesis berbasis aturan terverifikasi. Sistem ini tidak memerlukan koneksi maupun biaya API LLM eksternal pihak ketiga saat berjalan.
 
 ---
 
-## 5. Technology Stack
+## 5. Stack Teknologi
 
-| Category | Component / Technology | Specification & Version |
+| Kategori | Komponen / Teknologi | Spesifikasi & Versi |
 | :--- | :--- | :--- |
-| **Frontend** | Framework & Styling | Next.js 14.2 (App Router), React 18, TypeScript, Tailwind CSS 3.4 |
-| | Visualizations & Icons | Recharts 2.12, Lucide React 0.359 |
-| **Backend** | REST API Framework | FastAPI 0.115, Starlette, Uvicorn 0.34, Pydantic v2 |
-| | ORM & Migrations | SQLAlchemy 2.0.38, Alembic 1.14 |
-| **Data & Async** | Database Engine | PostgreSQL 16 Alpine (with least-privilege role separation) |
-| | Cache & Session Store | Redis 7 Alpine, `redis-py` 5.2 |
-| | Task Queue & Worker | Celery 5.4 (JSON task serialization, Redis broker/backend) |
-| **Machine Learning**| Algorithms & Modeling | LightGBM 4.7.0, XGBoost 3.4.1, Scikit-Learn 1.9.1 |
-| | Data Manipulation | Pandas 3.1.1, NumPy 2.5.4, PyArrow 19.0 |
-| **AI & Retrieval** | Vector Store & NLP | ChromaDB 1.5.9 (local storage), Scikit-Learn TF-IDF, Regex NLP |
-| **Security** | Hashing & Cryptography | Argon2id (`argon2-cffi` 23.1.0), PyJWT 2.10.1 (`HS256`) |
-| **DevOps** | Containerization | Multi-stage non-root Docker (`smartdist:smartdist` & `nextjs:1001`) |
-| **Testing** | Automated Verification | Pytest 9.2, `pytest-asyncio`, `httpx2`, ESLint 8.57 |
+| **Frontend** | Framework & Tampilan | Next.js 14.2 (App Router), React 18, TypeScript, Tailwind CSS 3.4 |
+| | Visualisasi & Ikon | Recharts 2.12, Lucide React 0.359 |
+| **Backend** | Framework REST API | FastAPI 0.115, Starlette, Uvicorn 0.34, Pydantic v2 |
+| | ORM & Migrasi DB | SQLAlchemy 2.0.38, Alembic 1.14 |
+| **Data & Antrean** | Mesin Basis Data | PostgreSQL 16 Alpine (isolasi hak akses bertingkat) |
+| | Cache & Sesi | Redis 7 Alpine, `redis-py` 5.2 |
+| | Task Queue & Worker | Celery 5.4 (serialisasi JSON, broker/backend Redis) |
+| **Machine Learning**| Algoritma & Model | LightGBM 4.7.0, XGBoost 3.4.1, Scikit-Learn 1.9.1 |
+| | Manipulasi Data | Pandas 3.1.1, NumPy 2.5.4, PyArrow 19.0 |
+| **AI & Retrieval** | Vector Store & NLP | ChromaDB 1.5.9 (penyimpanan lokal), Scikit-Learn TF-IDF, Regex NLP |
+| **Keamanan** | Hashing & Kriptografi | Argon2id (`argon2-cffi` 23.1.0), PyJWT 2.10.1 (`HS256`) |
+| **DevOps** | Kontainerisasi | Docker multi-stage non-root (`smartdist:smartdist` & `nextjs:1001`) |
+| **Pengujian** | Verifikasi Otomatis | Pytest 9.2, `pytest-asyncio`, `httpx`, ESLint 8.57 |
 
 ---
 
-## 6. Data Engineering & Provenance
+## 6. Rekayasa Data & Provenansi
 
-### Dataset Provenance
-The historical daily sales core is sourced from the open academic dataset **Corporation Favorita Grocery Sales Forecasting** (Kaggle):
-- **Temporal Span:** Full calendar year 2013 (`2013-01-01` to `2013-12-31`).
-- **Scale:** **648,648** validated daily sales records (daily aggregated observations per store-product family).
-- **Topology:** 54 physical retail stores across Ecuadorian provinces; 33 distinct product families.
-- **Exogenous Signals:** Daily crude oil prices (Ecuadorian macroeconomic indicator) and national/regional holiday calendars.
+### Provenansi Dataset
+Data historis observasi penjualan harian bersumber dari dataset riset terbuka **Corporation Favorita Grocery Sales Forecasting** (Kaggle):
+- **Rentang Waktu:** Tahun kalender penuh 2013 (`2013-01-01` s.d. `2013-12-31`).
+- **Skala Data:** **648.648** data observasi penjualan harian tervalidasi (agregat tingkat toko-famili produk per hari).
+- **Cakupan Toko & Produk:** 54 toko ritel fisik di berbagai provinsi Ekuador; 33 famili kategori produk.
+- **Sinyal Eksogen:** Harga harian minyak mentah dunia (indikator makroekonomi Ekuador) serta kalender hari libur nasional dan regional.
 
-### Feature Pipeline (Zero Temporal Leakage)
-Engineered in `ml/features/` with strict backward-looking windows to prevent lookahead bias:
-- **Calendar Signals:** Day of week, day of month, week of year, quarter, is_weekend, is_month_start, is_month_end.
-- **Economic & Store Features:** Daily crude oil price, store type, store cluster, holiday flags (local, regional, national), promotion intensity.
-- **Lag Features:** $t-1$, $t-7$, $t-14$, and $t-28$ days sales volume.
-- **Rolling Window Statistics:** Rolling mean and rolling standard deviation over 7-day, 14-day, and 28-day windows.
+### Pipeline Fitur (Tanpa Kebocoran Data Masa Depan)
+Dibangun pada direktori `ml/features/` dengan jendela waktu mundur (*backward-looking*) yang ketat guna mencegah *lookahead bias*:
+- **Fitur Kalender:** Hari dalam seminggu, tanggal dalam bulan, minggu dalam tahun, kuartal, penanda akhir pekan, awal bulan, dan akhir bulan.
+- **Fitur Toko & Ekonomi:** Harga minyak harian, tipe toko, kluster toko, penanda hari libur (lokal, regional, nasional), dan status promosi.
+- **Fitur Lag:** Volume penjualan pada hari $t-1$, $t-7$, $t-14$, dan $t-28$.
+- **Statistik Rolling Window:** Rata-rata bergerak (*rolling mean*) dan standar deviasi bergerak (*rolling std*) pada jendela 7 hari, 14 hari, dan 28 hari.
 
-### Synthetic Data Disclaimer
-Parameters outside the Kaggle sales history—specifically warehouse inventory balances, supplier lead times, procurement costs ($S$), and unit holding costs ($H$)—were generated procedurally via `ml/pipelines/synthetic/inventory_generator.py` to establish an operational inventory simulation baseline. Fictional supplier names and warehouse topologies are explicitly synthetic and do not represent actual commercial operations.
+### Keterangan Data Sintetis
+Parameter operasional di luar data penjualan Kaggle—khususnya saldo stok gudang, waktu tunggu pemasok (*lead time*), biaya pemesanan ($S$), dan biaya simpan per unit ($H$)—dibuat secara prosedural melalui skrip `ml/pipelines/synthetic/inventory_generator.py` untuk mensimulasikan lingkungan pengadaan logistik nyata. Nama pemasok dan konfigurasi gudang merupakan data sintetis simulasi dan tidak merepresentasikan entitas komersial tertentu.
 
 ---
 
-## 7. Demand Forecasting
+## 7. Peramalan Permintaan (Demand Forecasting)
 
-### Formulation & Objective
-- **Target Variable:** `quantity_sold` (Daily sales units per store-product pair).
-- **Validation Protocol:** Chronological time-series partition with strict temporal ordering:
-  - **Train Set:** 2013-01-29 to 2013-10-31 (276 days)
-  - **Validation Set:** 2013-11-01 to 2013-11-30 (30 days, 53,460 observations)
-  - **Holdout Test Set:** 2013-12-01 to 2013-12-31 (31 days, 53,460 observations)
+### Formulasi & Tujuan
+- **Target Prediksi:** `quantity_sold` (Unit kuantitas penjualan harian per kombinasi cabang toko dan famili produk).
+- **Protokol Validasi:** Pemisahan deret waktu kronologis (*chronological time-series split*):
+  - **Data Latih (Train Set):** 2013-01-29 s.d. 2013-10-31 (276 hari)
+  - **Data Validasi (Validation Set):** 2013-11-01 s.d. 2013-11-30 (30 hari, 53.460 observasi)
+  - **Data Uji Holdout (Holdout Test Set):** 2013-12-01 s.d. 2013-12-31 (31 hari, 53.460 observasi)
 
-### Verified Model Comparison (Validation Set: November 2013)
-*Source: [`ml/artifacts/*_metadata.json`](ml/artifacts/)*
+### Perbandingan Model Tervalidasi (Data Validasi: November 2013)
+*Sumber: [`ml/artifacts/*_metadata.json`](ml/artifacts/)*
 
-| Model Architecture | MAE (Units) | RMSE | WAPE (%) | RMSLE | Status |
+| Arsitektur Model | MAE (Unit) | RMSE | WAPE (%) | RMSLE | Status |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Seasonal Naive Baseline (Lag 7)** | 40.83 | 310.00 | 17.67% | 0.4103 | Baseline |
-| **XGBoost Regressor (v1)** | 30.65 | 218.25 | 13.26% | 0.5434 | Challenger |
-| **LightGBM Regressor (v1)** | **30.25** | **219.56** | **13.09%** | **0.5598** | **CHAMPION** |
+| **Seasonal Naive Baseline (Lag 7)** | 40,83 | 310,00 | 17,67% | 0,4103 | Baseline |
+| **XGBoost Regressor (v1)** | 30,65 | 218,25 | 13,26% | 0,5434 | Penantang |
+| **LightGBM Regressor (v1)** | **30,25** | **219,56** | **13,09%** | **0,5598** | **CHAMPION** |
 
-### Multi-Horizon Holdout Evaluation (December 2013 Test Set)
-Evaluated across holiday-dense December 2013 using recursive multi-horizon feature feeding:
+### Evaluasi Rekursif Multi-Horizon (Data Uji Desember 2013)
+Dievaluasi pada periode lonjakan belanja liburan akhir tahun (Desember 2013) dengan pengisian fitur rekursif:
 
-| Forecast Horizon | Sample Count | Actual Mean Sales | MAE (Units) | RMSE | WAPE (%) | RMSLE |
+| Horizon Prediksi | Jumlah Sampel | Rata-rata Penjualan Riil | MAE (Unit) | RMSE | WAPE (%) | RMSLE |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **7-Day Ahead** | 12,474 | 272.45 | **37.79** | 222.95 | **13.87%** | 0.6062 |
-| **14-Day Ahead**| 24,948 | 266.19 | **44.52** | 244.10 | **16.72%** | 0.6712 |
-| **30-Day Ahead**| 51,678 | 295.98 | **77.32** | 376.59 | **26.12%** | 1.0112 |
+| **7 Hari ke Depan** | 12.474 | 272,45 | **37,79** | 222,95 | **13,87%** | 0,6062 |
+| **14 Hari ke Depan**| 24.948 | 266,19 | **44,52** | 244,10 | **16,72%** | 0,6712 |
+| **30 Hari ke Depan**| 51.678 | 295,98 | **77,32** | 376,59 | **26,12%** | 1,0112 |
 
-> *Generalization Note:* December represents a retail peak characterized by strong holiday seasonality. Error increases across longer horizons (30 days) due to recursive error compounding—an expected characteristic of autoregressive multi-step retail models.
+> *Catatan Generalisasi:* Periode Desember memiliki lonjakan volume penjualan ritel signifikan (+27,9% dibanding bulan reguler). Kenaikan galat prediksi pada horizon yang lebih panjang (30 hari) diakibatkan oleh akumulasi galat rekursif (*compounding error*), yang merupakan karakteristik alami dari peramalan autoregresif multi-langkah.
 
 ---
 
-## 8. Inventory Optimization
+## 8. Optimalisasi Inventaris (Inventory Optimization)
 
-SmartDist AI converts forecasted demand distributions into mathematically grounded procurement decisions (`backend/app/services/`):
+SmartDist AI menerjemahkan distribusi peramalan permintaan menjadi keputusan pengadaan yang terukur secara matematis (`backend/app/services/`):
 
-1. **Safety Stock ($SS$) under Stochastic Lead Time**:
+1. **Safety Stock ($SS$) dengan Waktu Tunggu Stokastik**:
    $$SS = Z \cdot \sqrt{L \cdot \sigma_D^2 + D^2 \cdot \sigma_L^2}$$
-   Where $Z$ is the standard normal service level factor ($Z = 1.65$ for 95%, $Z = 2.05$ for 98%), $L$ is mean supplier lead time, $\sigma_D$ is demand variance, and $\sigma_L$ is lead-time variance.
+   Di mana $Z$ adalah faktor tingkat layanan normal standar ($Z = 1,65$ untuk 95%, $Z = 2,05$ untuk 98%), $L$ adalah rata-rata lead time pemasok, $\sigma_D$ adalah varians permintaan, dan $\sigma_L$ adalah varians lead time.
 
-2. **Dynamic Reorder Point ($ROP$)**:
+2. **Titik Pemesanan Kembali Dinamis (Dynamic Reorder Point / $ROP$)**:
    $$ROP = (\bar{D} \cdot L) + SS$$
 
-3. **Economic Order Quantity ($EOQ$)**:
+3. **Kuantitas Pesanan Ekonomis (Economic Order Quantity / $EOQ$)**:
    $$EOQ = \sqrt{\frac{2 \cdot D \cdot S}{H}}$$
-   Where $D$ is annual forecast demand, $S$ is fixed order cost per replenishment batch, and $H$ is unit holding cost per year.
+   Di mana $D$ adalah estimasi permintaan tahunan, $S$ adalah biaya pemesanan per batch, dan $H$ adalah biaya penyimpanan per unit per tahun.
 
-4. **Days-of-Supply Runout & Monte Carlo Simulation**:
-   - **Runout Days:** $\text{Runout} = I_{\text{on\_hand}} / \bar{D}_{\text{forecast}}$.
-   - **Risk Tiers:** Flagged as `CRITICAL` when $\text{Runout} \le 0.5 \times L$ or stockout is imminent.
-   - **Simulation Engine:** Evaluates empirical service levels over 1,000 iterations under stochastic demand draws (`simulation_service.py`).
-
----
-
-## 9. Anomaly Detection
-
-To prevent alert fatigue from single-algorithm thresholds, the system implements a **multi-evidence hybrid scoring engine** (`ml/anomaly_detection/`):
-
-$$S_{\text{final}} = \sum_{i} w_i \cdot S_i \quad \text{where} \quad \sum w_i = 1.0$$
-
-- **Statistical Robust Z-Score ($w = 0.40$):** Computes deviation using Median and Median Absolute Deviation (MAD), resilient against severe retail outliers.
-- **Forecast Residual Score ($w = 0.35$):** Measures normalized divergence between actual sales volume and LightGBM predicted expectation.
-- **Machine Learning Outlier Score ($w = 0.25$):** Unsupervised Scikit-Learn Isolation Forest trained on multivariate time-series sales features.
-- **Calibrated Severity Tiers:**
-  - `NORMAL`: $[0.00, 0.40)$
-  - `LOW`: $[0.40, 0.60)$
-  - `MEDIUM`: $[0.60, 0.75)$
-  - `HIGH`: $[0.75, 0.90)$
-  - `CRITICAL`: $[0.90, 1.00]$
-
-> *Benchmark Note:* Anomaly precision and recall metrics were verified against programmatically injected synthetic benchmarks (`synthetic_benchmark.py`). Actual commercial detection rates depend on real-world operational definitions of shrinkage and data noise.
+4. **Ketahanan Stok (Days of Supply) & Simulasi Monte Carlo**:
+   - **Estimasi Hari Habis:** $\text{Runout} = I_{\text{on\_hand}} / \bar{D}_{\text{forecast}}$.
+   - **Tingkat Risiko:** Ditandai sebagai `CRITICAL` jika $\text{Runout} \le 0,5 \times L$ atau terjadi risiko *stockout* mendesak.
+   - **Mesin Simulasi:** Menguji ketahanan tingkat layanan operasional empiris melalui 1.000 iterasi stokastik (`simulation_service.py`).
 
 ---
 
-## 10. AI Business Assistant
+## 9. Deteksi Anomali (Anomaly Detection)
 
-The business assistant provides operational intelligence through an **offline-capable, zero-API-cost, deterministic architecture**:
+Untuk menghindari alarm palsu (*alert fatigue*) akibat ambang batas tunggal, sistem mengimplementasikan **mesin penilaian hibrida multi-indikator** (`ml/anomaly_detection/`):
 
-- **Intent Classifier (`ai_assistant/orchestrator.py`):** Regex and semantic token classification mapping prompts to 6 internal tools (`sales_tool`, `forecast_tool`, `inventory_tool`, `anomaly_tool`, `rag_tool`, `sql_tool`).
-- **Semantic SOP Retrieval (RAG):** Queries internal logistics and procurement policies using local ChromaDB vector embeddings with an automated TF-IDF fallback. Responses cite specific document filenames and section anchors.
-- **Safe Text-to-SQL Engine:**
-  - **Syntax Sanitizer (`sql_validator.py`):** Blocks comments (`--`, `/* */`), stacked queries (`;`), DDL/DML (`DROP`, `INSERT`, `UPDATE`), system functions (`version()`, `pg_shadow`), and recursive CTEs.
-  - **PostgreSQL Privilege Boundary:** Queries execute under dedicated database role `smartdist_readonly` (`ReadOnlySessionLocal`). It has zero write privileges and is explicitly denied access to the `users` table.
-- **Runtime Dependency Notice:** The assistant is completely self-contained within Python and local vector storage. It does **NOT** require an external LLM API key (e.g. OpenAI, Anthropic, Gemini) to operate.
+$$S_{\text{final}} = \sum_{i} w_i \cdot S_i \quad \text{dengan} \quad \sum w_i = 1,0$$
 
----
+- **Skor Z-Score Robust ($w = 0,40$):** Menghitung deviasi penjualan menggunakan Median dan Median Absolute Deviation (MAD), tahan terhadap pencilan ekstrem volume ritel.
+- **Skor Residual Peramalan ($w = 0,35$):** Mengukur selisih ternormalisasi antara penjualan aktual dengan nilai ekspektasi model LightGBM.
+- **Skor Pencilan Machine Learning ($w = 0,25$):** Menggunakan Isolation Forest (Scikit-Learn) tanpa supervisi yang dilatih pada fitur deret waktu multivariat.
+- **Tingkat Keparahan Terkalibrasi:**
+  - `NORMAL`: $[0,00, 0,40)$
+  - `LOW`: $[0,40, 0,60)$
+  - `MEDIUM`: $[0,60, 0,75)$
+  - `HIGH`: $[0,75, 0,90)$
+  - `CRITICAL`: $[0,90, 1,00]$
 
-## 11. Security Architecture
-
-The platform enforces defense-in-depth across application, network, and data tiers:
-
-- **Password Hashing:** Argon2id (`argon2-cffi`) using RFC 9106 recommended parameters ($m=64\text{MB}, t=3, p=4$).
-- **Authentication & Sessions:** Stateless HS256 JWT tokens with 30-minute expiration. Logout actively registers token JTIs in a Redis expiration blocklist (`HTTP 401` on reused tokens).
-- **Role-Based Access Control (RBAC):** Backend dependency enforcement:
-  - `ADMIN`: Full access to user provisioning and system administration.
-  - `ANALYST`: Access to analytics, forecasting, inventory, and AI Assistant.
-  - `VIEWER`: Read-only access to dashboards (barred from assistant tools and user management).
-- **CSRF & Origin Protection:** Double-submit cookie verification (`csrf_token` cookie matching `X-CSRF-Token` header on mutating requests) with Origin/Referer inspection against configured CORS whitelists.
-- **Fail-Closed Rate Limiting:** Distributed Redis sliding-window limiter. Sensitive authentication routes fail closed (`HTTP 503`) if Redis is offline, preventing brute-force exploitation.
-- **PostgreSQL Least Privilege:**
-  - `smartdist_owner`: Migration and schema owner (`NOSUPERUSER NOCREATEDB NOCREATEROLE NOREPLICATION`).
-  - `smartdist_app`: Operational application runtime (DML only, no DDL/DROP rights).
-  - `smartdist_readonly`: AI Assistant engine (SELECT only, denied access to `users`).
-- **Container Hardening:** Non-root execution (`USER smartdist` in backend, `USER nextjs` in frontend). Production compose binds database and cache strictly to internal container networks.
+> *Catatan Benchmark:* Presisi dan recall mesin deteksi diverifikasi terhadap skenario anomali terinjeksi sintetis (`synthetic_benchmark.py`). Pada implementasi industri riil, tingkat deteksi akan disesuaikan dengan toleransi susut barang dan variasi data operasional setempat.
 
 ---
 
-## 12. Getting Started
+## 10. Asisten Bisnis AI (AI Business Assistant)
 
-### Prerequisites
-- **Docker Engine 24.0+** and **Docker Compose v2.20+**
-- *(Alternative for native execution)*: Python 3.12+, Node.js 20 LTS, PostgreSQL 16, Redis 7
+Asisten bisnis menyediakan kecerdasan operasional interaktif melalui **arsitektur deterministik yang aman, bekerja offline, dan tanpa biaya API**:
+
+- **Pengklasifikasi Niat / Intent Classifier (`ai_assistant/orchestrator.py`):** Klasifikasi berbasis ekspresi reguler (regex) dan pencocokan token semantik yang memetakan masukan pengguna ke dalam 6 modul alat internal (`sales_tool`, `forecast_tool`, `inventory_tool`, `anomaly_tool`, `rag_tool`, `sql_tool`).
+- **Temu Kembali Informasi SOP (RAG):** Mencari basis pengetahuan kebijakan logistik dan pengadaan menggunakan embedding vektor lokal ChromaDB dengan mekanisme cadangan (*fallback*) TF-IDF otomatis. Setiap jawaban menyertakan rujukan nama berkas dokumen dan sub-bagian terkait.
+- **Mesin Safe Text-to-SQL:**
+  - **Sanitasi Kueri (`sql_validator.py`):** Memblokir karakter berbahaya seperti komentar (`--`, `/* */`), eksekusi perintah bertumpuk (`;`), instruksi DDL/DML manipulasi (`DROP`, `INSERT`, `UPDATE`), fungsi sistem (`version()`, `pg_shadow`), dan CTE rekursif.
+  - **Isolasi Izin Basis Data:** Kueri dieksekusi secara ketat di bawah role database `smartdist_readonly` (`ReadOnlySessionLocal`) yang hanya memiliki hak baca (SELECT) dan secara eksplisit diblokir dari tabel kredensial `users`.
+- **Kemandirian Runtime:** Asisten ini beroperasi sepenuhnya mandiri di dalam lingkungan Python dan penyimpanan vektor lokal. Sistem ini **TIDAK** membutuhkan token API LLM komersial eksternal (seperti OpenAI, Anthropic, atau Gemini) untuk bekerja.
 
 ---
 
-### Method A: Production Docker Deployment (Recommended)
+## 11. Arsitektur Keamanan
 
-1. **Clone the repository**:
+Platform mengimplementasikan prinsip pertahanan berlapis (*defense-in-depth*) pada seluruh tingkatan aplikasi, jaringan, dan basis data:
+
+- **Pengacakan Kata Sandi (Password Hashing):** Menggunakan Argon2id (`argon2-cffi`) dengan parameter rekomendasi RFC 9106 ($m=64\text{MB}, t=3, p=4$).
+- **Otentikasi & Sesi Pengguna:** Token JWT stateless HS256 dengan masa berlaku 30 menit. Mekanisme *logout* mendaftarkan identitas JTI ke dalam daftar blokir Redis yang otomatis kedaluwarsa (`HTTP 401` jika token coba digunakan kembali).
+- **Kontrol Akses Berbasis Peran (RBAC):** Penegakan dependen pada rute backend:
+  - `ADMIN`: Akses penuh untuk manajemen pengguna dan administrasi sistem.
+  - `ANALYST`: Akses untuk analitik penjualan, peramalan, manajemen inventaris, dan asisten AI.
+  - `VIEWER`: Hak akses baca pada dasbor (dilarang menggunakan asisten AI dan konfigurasi sistem).
+- **Perlindungan CSRF & Origin:** Verifikasi *double-submit cookie* (pemeriksaan kecocokan cookie `csrf_token` dengan header `X-CSRF-Token` pada metode HTTP mutasi POST/PUT/DELETE) serta validasi header Origin/Referer terhadap whitelist CORS.
+- **Rate Limiting Fail-Closed:** Pembatas laju permintaan berbasis sliding-window di Redis. Rute otentikasi penting beroperasi dalam mode *fail-closed* (`HTTP 503` jika Redis terputus), mencegah serangan brute-force saat infrastruktur cache offline.
+- **Prinsip Hak Akses Terendah (Least Privilege PostgreSQL):**
+  - `smartdist_owner`: Pemilik skema dan pengelola migrasi Alembic (`NOSUPERUSER NOCREATEDB NOCREATEROLE NOREPLICATION`).
+  - `smartdist_app`: Akun operasional aplikasi harian (hanya DML, dilarang menjalankan DDL/DROP).
+  - `smartdist_readonly`: Akun khusus asisten SQL (hanya SELECT pada tabel transaksi dan bisnis, dilarang membaca tabel pengguna).
+- **Pengerasan Kontainer (Container Hardening):** Eksekusi proses kontainer tanpa izin root (`USER smartdist` di backend, `USER nextjs` di frontend). Konfigurasi compose produksi membatasi akses basis data dan cache hanya pada jaringan internal kontainer.
+
+---
+
+## 12. Panduan Instalasi & Menjalankan Aplikasi
+
+### Kebutuhan Sistem
+- **Docker Engine 24.0+** dan **Docker Compose v2.20+**
+- *(Opsi alternatif eksekusi lokal tanpa kontainer)*: Python 3.12+, Node.js 20 LTS, PostgreSQL 16, Redis 7
+
+---
+
+### Metode A: Menjalankan Menggunakan Docker Produksi (Direkomendasikan)
+
+1. **Clone repositori proyek**:
    ```bash
-   git clone https://github.com/your-username/smartdist-ai.git
+   git clone https://github.com/azharzuhro12/smartdist-ai.git
    cd smartdist-ai
    ```
 
-2. **Configure production environment**:
+2. **Konfigurasi variabel lingkungan produksi**:
    ```bash
    cp .env.production.example .env.production
    ```
-   *Edit `.env.production` and provide secure values for `SECRET_KEY`, `POSTGRES_OWNER_PASSWORD`, `POSTGRES_APP_PASSWORD`, `POSTGRES_READONLY_PASSWORD`, and `REDIS_PASSWORD`.*
+   *Buka `.env.production` dan tentukan nilai yang aman untuk `SECRET_KEY`, `POSTGRES_OWNER_PASSWORD`, `POSTGRES_APP_PASSWORD`, `POSTGRES_READONLY_PASSWORD`, dan `REDIS_PASSWORD`.*
 
-3. **Launch the production container fleet**:
+3. **Jalankan layanan kontainer**:
    ```bash
    PROD_ENV_FILE=.env.production docker compose -f docker-compose.prod.yml up -d --build
    ```
 
-4. **Execute database migrations and provision least-privilege roles**:
+4. **Jalankan migrasi basis data dan konfigurasi hak akses least-privilege**:
    ```bash
-   # Run schema migrations under owner role
+   # Eksekusi migrasi skema menggunakan role owner
    PROD_ENV_FILE=.env.production docker compose -f docker-compose.prod.yml run --rm backend \
        alembic upgrade head
 
-   # Provision least-privilege roles
+   # Terapkan isolasi hak akses role database
    docker exec -i smartdist_prod_postgres psql -U smartdist_owner -d smartdist_db < scripts/provision_db_roles.sql
    ```
 
-5. **Access the application**:
-   - Web Dashboard: **http://localhost:3000**
-   - Backend OpenAPI Docs: **http://localhost:8000/api/v1/docs** (internal/dev only)
-   - Default Administrator Seed:
+5. **Akses antarmuka aplikasi**:
+   - Dasbor Web: **http://localhost:3000**
+   - Dokumentasi OpenAPI Backend: **http://localhost:8000/api/v1/docs** (hanya dev/internal)
+   - Kredensial Administrator Bawaan:
      - **Username:** `admin`
-     - **Password:** `Admin@SmartDist2026!` *(Configurable via `INITIAL_ADMIN_PASSWORD` in `.env.production`)*
+     - **Password:** `Admin@SmartDist2026!` *(Dapat disesuaikan melalui `INITIAL_ADMIN_PASSWORD` di berkas lingkungan)*
 
 ---
 
-### Method B: Local Native Development Setup
+### Metode B: Menjalankan di Lingkungan Pengembangan Lokal (Native)
 
-1. **Start database and cache services**:
+1. **Jalankan layanan basis data dan cache via Docker**:
    ```bash
    docker compose up -d postgres redis
    ```
 
-2. **Configure local environment**:
+2. **Konfigurasi variabel lingkungan lokal**:
    ```bash
    cp .env.example .env
    ```
 
-3. **Setup and activate Python virtual environment**:
+3. **Siapkan dan aktifkan virtual environment Python**:
    ```bash
    python3 -m venv .venv
    source .venv/bin/activate
    pip install -r backend/requirements.txt
    ```
 
-4. **Run migrations and start backend server**:
+4. **Jalankan migrasi dan nyalakan backend FastAPI**:
    ```bash
    alembic upgrade head
    python -m uvicorn backend.app.main:app --host 0.0.0.0 --port 8035 --reload
    ```
 
-5. **Start frontend development server**:
+5. **Nyalakan server frontend Next.js**:
    ```bash
    cd frontend
    npm install
    npm run dev
    ```
-   Open **http://localhost:3000** in your browser.
+   Buka **http://localhost:3000** pada peramban Anda.
+   *(Kredensial bawaan lingkungan pengembangan: pengguna `admin` dengan kata sandi `AdminPass123!`)*.
 
 ---
 
-### Health Checks
-- Process Liveness Check: `curl -f http://localhost:8035/health`
-- Deep Multi-Service Readiness Check (Postgres, Redis, Celery): `curl -f http://localhost:8035/api/v1/health`
+### Pemeriksaan Kesehatan Layanan (Health Checks)
+- Cek keaktifan proses backend: `curl -f http://localhost:8035/health`
+- Cek kesiapan mendalam multi-layanan (PostgreSQL, Redis, Celery): `curl -f http://localhost:8035/api/v1/health`
 
 ---
 
-## 13. Testing & Verification
+## 13. Pengujian & Verifikasi Kualitas
 
-SmartDist AI incorporates an extensive test suite verifying mathematical models, REST contracts, adversarial SQL security, Redis outages, and PostgreSQL privilege barriers:
+SmartDist AI dilengkapi serangkaian pengujian otomatis komprehensif yang memvalidasi kalkulasi model matematis, kontrak REST API, ketahanan injeksi kueri SQL, penanganan gangguan Redis, serta batasan hak akses PostgreSQL:
 
 ```bash
-# Execute all backend tests (253 tests)
+# Menjalankan seluruh pengujian backend (253 tests)
 PYTHONPATH=. .venv/bin/python -m pytest
 
-# Execute frontend type checking, linting, and production build
+# Menjalankan pemeriksaan tipe TypeScript, linter, dan build frontend
 cd frontend
 npx tsc --noEmit
 npm run lint
 npm run build
 ```
 
-**Verification Results:**
-- **Backend Tests:** **253 passed out of 253** in 128.45s (0 failures, 0 errors).
-- **Frontend Checks:** TypeScript (0 errors), ESLint (0 warnings), Next.js production build (10/10 static pages compiled cleanly).
+**Hasil Verifikasi:**
+- **Pengujian Backend:** **253 lulus dari 253 pengujian** dalam 128,45 detik (0 kegagalan, 0 galat).
+- **Pemeriksaan Frontend:** TypeScript (0 kesalahan), ESLint (0 peringatan), Next.js production build (10/10 halaman statis terkompilasi bersih).
 
 ---
 
-## 14. Repository Structure
+## 14. Struktur Direktori Repositori
 
 ```text
 smartdist-ai/
-├── .dockerignore                            # Build context filter (24 MB context)
-├── .env.example                             # Development configuration template
-├── .env.production.example                  # Production least-privilege configuration template
-├── .gitignore                               # Secret, backup, and dataset exclusion rules
-├── LICENSE                                  # MIT Open Source License
-├── README.md                                # Root technical portfolio presentation
-├── docker-compose.yml                       # Local development compose (host port mapped)
-├── docker-compose.prod.yml                  # Hardened production compose (internal network only)
-├── ai_assistant/                            # Business Assistant Subsystem
-│   ├── orchestrator.py                      # Intent classifier & multi-tool routing engine
-│   ├── rag/                                 # ChromaDB semantic retrieval & TF-IDF fallback
-│   ├── sql_agent/                           # Text-to-SQL agent, SQLValidator, SafeSQLExecutor
-│   └── tools/                               # 6 Domain tools (sales, forecast, inventory, anomaly, rag, sql)
-├── backend/                                 # Core Application Backend
-│   ├── alembic/                             # Database schema migrations
+├── .dockerignore                            # Filter konteks build Docker (konteks 24 MB)
+├── .env.example                             # Templat konfigurasi lingkungan pengembangan
+├── .env.production.example                  # Templat konfigurasi produksi least-privilege
+├── .gitignore                               # Aturan pengecualian berkas rahasia, backup, dan dataset
+├── LICENSE                                  # Berkas lisensi terbuka MIT
+├── README.md                                # Presentasi portofolio teknis repositori
+├── docker-compose.yml                       # Konfigurasi compose dev (pemetaan port lokal)
+├── docker-compose.prod.yml                  # Konfigurasi compose produksi (jaringan internal kontainer)
+├── ai_assistant/                            # Subsistem Asisten Bisnis AI
+│   ├── orchestrator.py                      # Pengklasifikasi niat & mesin perute alat multi-domain
+│   ├── rag/                                 # Temu kembali semantik ChromaDB & fallback TF-IDF
+│   ├── sql_agent/                           # Agen Text-to-SQL, SQLValidator, SafeSQLExecutor
+│   └── tools/                               # 6 Alat domain (sales, forecast, inventory, anomaly, rag, sql)
+├── backend/                                 # Subsistem Backend Utama
+│   ├── alembic/                             # Berkas skrip migrasi skema basis data
 │   ├── app/
-│   │   ├── api/                             # FastAPI routers, dependencies (RBAC, JWT)
-│   │   ├── core/                            # Config, security, rate_limit, csrf, logging, middleware
-│   │   ├── db/                              # Sync & ReadOnly engines, session factories, init_db
-│   │   ├── models/                          # SQLAlchemy ORM business & auth entities
-│   │   ├── schemas/                         # Pydantic v2 validation contracts
-│   │   ├── services/                        # EOQ, ROP, Safety Stock, Monte Carlo simulation, anomalies
-│   │   └── workers/                         # Celery application & asynchronous worker tasks
-│   └── tests/                               # 253 Automated backend test suites
-├── docs/                                    # Documentation Tree
-│   ├── README.md                            # Master documentation navigation index
-│   ├── dataset-and-asset-licensing.md       # Intellectual property & data provenance guide
-│   ├── architecture/                        # System topology & data flow diagrams
-│   ├── machine-learning/                    # Feature engineering, model evaluation, validation strategy
-│   ├── inventory/                           # Optimization formulas and stockout risk runout
-│   ├── anomaly-detection/                   # Hybrid scoring methodology and synthetic benchmarks
-│   ├── ai-assistant/                        # Tool integration, RAG, and SQL security
-│   ├── security/                            # Authentication, database roles, security operations
-│   ├── deployment/                          # Deployment SOP, backup/restore, monitoring runbooks
-│   └── audit/                               # Preserved engineering audits (Phase 2 through 6.2)
-├── frontend/                                # Next.js 14 Web Application
-│   ├── src/app/                             # App Router pages (6 domain views + login)
-│   ├── src/components/                      # Reusable UI widgets, charts, navigation
-│   ├── src/lib/                             # Typed API client with CSRF token extraction
-│   └── next.config.mjs                      # Security headers & Content Security Policy (CSP)
-├── infrastructure/                          # Dockerfiles & Redis Configuration
-│   ├── docker/                              # Non-root Dockerfile.backend & Dockerfile.frontend
-│   └── redis/                               # Hardened redis.conf
-├── ml/                                      # Machine Learning Engineering Subsystem
-│   ├── anomaly_detection/                   # Multi-evidence hybrid scoring engine
-│   ├── artifacts/                           # Serialized models (LightGBM, XGBoost, Naive, IsoForest)
-│   ├── data/                                # Gitkept raw/processed/features directories
-│   ├── features/                            # Lag, rolling, calendar, and external oil/holiday features
-│   ├── inference/                           # Offline & online multi-horizon forecast predictors
-│   ├── models/                              # LightGBM, XGBoost, SeasonalNaive wrappers
-│   └── training/                            # Training pipelines, evaluators, model registry
-├── screenshots/                             # Visual Documentation Assets
-│   ├── README.md                            # Screenshot capture guide & privacy instructions
-│   ├── dashboard/                           # Executive overview & sales analytics captures
-│   ├── forecasting/                         # Demand forecasting captures
-│   ├── inventory/                           # Inventory optimization captures
-│   ├── anomalies/                           # Anomaly detection captures
-│   └── assistant/                           # AI Business Assistant captures
-└── scripts/                                 # Operational & Automation Scripts
-    ├── backup_db.sh                         # PostgreSQL compressed backup with SHA256
-    ├── restore_db.sh                        # Disaster recovery restore with overwrite safety guard
-    └── provision_db_roles.sql               # PostgreSQL least-privilege role setup script
+│   │   ├── api/                             # Router endpoint FastAPI, dependensi (RBAC, JWT)
+│   │   ├── core/                            # Konfigurasi, keamanan, rate_limit, csrf, logging, middleware
+│   │   ├── db/                              # Engine basis data sync & read-only, session maker, init_db
+│   │   ├── models/                          # Model ORM SQLAlchemy entitas bisnis & otentikasi
+│   │   ├── schemas/                         # Kontrak validasi data Pydantic v2
+│   │   ├── services/                        # Kalkulasi EOQ, ROP, Safety Stock, Monte Carlo, anomali
+│   │   └── workers/                         # Konfigurasi Celery & tugas pekerja latar belakang
+│   └── tests/                               # 253 Rangkaian pengujian otomatis backend
+├── docs/                                    # Dokumentasi Lengkap Proyek
+│   ├── README.md                            # Indeks utama navigasi dokumentasi
+│   ├── dataset-and-asset-licensing.md       # Panduan lisensi aset & provenansi data
+│   ├── architecture/                        # Dokumen topologi sistem & diagram alir data
+│   ├── machine-learning/                    # Rekayasa fitur, evaluasi model, strategi validasi
+│   ├── inventory/                           # Formulasi optimasi pengadaan & risiko kehabisan stok
+│   ├── anomaly-detection/                   # Metodologi skoring hibrida & benchmark sintetis
+│   ├── ai-assistant/                        # Integrasi alat, RAG, dan keamanan eksekusi SQL
+│   ├── security/                            # Otentikasi, role database, prosedur operasi keamanan
+│   ├── deployment/                          # SOP deployment, backup/restore, panduan pemantauan
+│   └── audit/                               # Arsip audit teknis (Fase 2 hingga Fase 6.5)
+├── frontend/                                # Aplikasi Antarmuka Pengguna Next.js 14
+│   ├── src/app/                             # Halaman App Router (6 dasbor domain + halaman masuk)
+│   ├── src/components/                      # Komponen UI modular, grafik Recharts, navigasi
+│   ├── src/lib/                             # Klien API bertipe data dengan ekstraksi token CSRF
+│   └── next.config.mjs                      # Konfigurasi header keamanan & Content Security Policy (CSP)
+├── infrastructure/                          # Konfigurasi Docker & Redis
+│   ├── docker/                              # Dockerfile.backend & Dockerfile.frontend non-root
+│   └── redis/                               # Berkas konfigurasi keamanan redis.conf
+├── ml/                                      # Subsistem Machine Learning Engineering
+│   ├── anomaly_detection/                   # Mesin penilaian anomali hibrida
+│   ├── artifacts/                           # Model serialisasi (LightGBM, XGBoost, Naive, IsoForest)
+│   ├── data/                                # Direktori data raw/processed/features (.gitkeep)
+│   ├── features/                            # Ekstraksi fitur lag, rolling, kalender, minyak & libur
+│   ├── inference/                           # Layanan inferensi peramalan multi-horizon offline & online
+│   ├── models/                              # Pembungkus model LightGBM, XGBoost, SeasonalNaive
+│   └── training/                            # Pipeline pelatihan model, evaluator, registri model
+├── screenshots/                             # Dokumentasi Aset Visual
+│   ├── README.md                            # Panduan pengambilan tangkapan layar & proteksi privasi
+│   ├── dashboard/                           # Tangkapan layar ringkasan eksekutif & analitik penjualan
+│   ├── forecasting/                         # Tangkapan layar peramalan permintaan
+│   ├── inventory/                           # Tangkapan layar optimasi inventaris
+│   ├── anomalies/                           # Tangkapan layar deteksi anomali
+│   └── assistant/                           # Tangkapan layar asisten bisnis AI
+└── scripts/                                 # Skrip Otomasi & Operasional
+    ├── backup_db.sh                         # Skrip pencadangan PostgreSQL terkompresi dengan SHA256
+    ├── restore_db.sh                        # Skrip pemulihan bencana (*disaster recovery*) aman
+    └── provision_db_roles.sql               # Skrip penyusunan role least-privilege PostgreSQL
 ```
 
 ---
 
-## 15. Dataset Attribution & Academic Disclaimers
+## 15. Atribusi Dataset & Batasan Akademis
 
-- **Retail Sales History:** Corporation Favorita Grocery Sales Forecasting dataset hosted by Kaggle under public open license.
-- **Academic Citation:**
+- **Data Historis Penjualan Ritel:** Dataset kompetisi *Corporation Favorita Grocery Sales Forecasting* yang disediakan oleh Kaggle di bawah lisensi terbuka.
+- **Kutipan Akademis:**
   > Corporación Favorita. (2017). *Corporación Favorita Grocery Sales Forecasting*. Kaggle. https://www.kaggle.com/c/favorita-grocery-sales-forecasting
-- **Synthetic Extensions:** Warehouse stock levels, replenishment constraints, supplier parameters, and synthetic anomaly benchmarks were generated procedurally for research and development purposes.
-- **Redistribution Policy:** Raw CSV files are excluded from version control via `.gitignore`. Users wishing to retrain models from raw files should download the dataset directly from Kaggle.
+- **Ekstensi Data Sintetis:** Parameter saldo stok gudang, batas pengadaan logistik, parameter pemasok, dan benchmark uji anomali digenerasi secara prosedural untuk keperluan riset dan demonstrasi platform.
+- **Kebijakan Distribusi Data:** Berkas mentah CSV tidak disertakan dalam kontrol versi git melalui aturan `.gitignore`. Pengguna yang ingin melatih ulang model dari data mentah dipersilakan mengunduh dataset secara mandiri dari Kaggle.
 
 ---
 
-## 16. License
+## 16. Lisensi
 
-This software is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for details.
+Perangkat lunak ini didistribusikan di bawah lisensi terbuka **MIT License** — silakan baca berkas [LICENSE](LICENSE) untuk informasi selengkapnya.
